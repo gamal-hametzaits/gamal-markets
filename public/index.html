@@ -4,70 +4,87 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>הגמל הצייץ · שווקים | נתוני בורסה חיים</title>
-<meta name="description" content="לוח מחוונים של הבורסה: תל אביב, ניו יורק ונסד״ק. נתוני אמת, טקסט בלבד.">
+<meta name="description" content="לוח מחוונים של הבורסה: תל אביב, ניו יורק ונסד״ק. נתוני אמת, בסגנון עיתון כלכלי.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&family=Frank+Ruhl+Libre:wght@400;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0B0B0B; --bg2:#111111; --line:#1E1E1E; --line2:#2A2A2A;
-  --txt:#EDEDED; --dim:#8F8F8F; --dim2:#5C5C5C;
-  --red:#E01F2E; --green:#22C55E;
+  --paper:#F3EEE1; --paper2:#EBE4D0; --ink:#191612; --ink2:#57503F;
+  --rule:#CFC7B0; --rule2:#B3A98E;
+  --up:#0E6E38; --dn:#B5121B;
+  --tapebg:#171410;
   --mono:'IBM Plex Mono',ui-monospace,monospace;
   --sans:'Heebo',system-ui,sans-serif;
+  --serif:'Frank Ruhl Libre','Noto Serif Hebrew',serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--txt);font-family:var(--sans);line-height:1.6;padding-bottom:40px}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;padding-bottom:40px}
 a{color:inherit;text-decoration:none}
 .mono{font-family:var(--mono)}
 .wrap{max-width:960px;margin:0 auto;padding:0 20px}
-header{position:sticky;top:0;z-index:50;background:rgba(11,11,11,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.hd{display:flex;align-items:center;justify-content:space-between;height:56px}
-.brand{display:flex;align-items:baseline;gap:10px;font-weight:900;font-size:19px}
-.brand .dot{color:var(--red);font-size:13px}
-.brand .mk{color:var(--red)}
-nav.top{display:flex;gap:20px;font-size:13.5px;color:var(--dim)}
-nav.top a:hover{color:var(--txt)}
-nav.top a.adm{color:var(--dim2)}
-.hero{padding:56px 0 30px;border-bottom:1px solid var(--line)}
-.hero h1{font-size:clamp(40px,8vw,84px);font-weight:900;line-height:1.02;letter-spacing:-2px}
-.hero h1 .r{color:var(--red)}
-.upd{margin-top:20px;font-family:var(--mono);font-size:12.5px;color:var(--dim2);display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.upd .live{color:var(--green)}
-.pulse{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);animation:pl 1.8s infinite}
-@keyframes pl{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.45)}55%{box-shadow:0 0 0 8px rgba(34,197,94,0)}}
-section.ex{padding:44px 0;border-bottom:1px solid var(--line)}
-.ex-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px}
-.ex-hd h2{font-size:clamp(26px,4.5vw,38px);font-weight:900;letter-spacing:-.5px}
-.ex-hd .sub{font-family:var(--mono);font-size:11.5px;color:var(--dim2);letter-spacing:.8px}
-.qrow{display:grid;grid-template-columns:1fr 130px 110px;gap:14px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--line)}
+header{position:sticky;top:0;z-index:50;background:rgba(243,238,225,.95);backdrop-filter:blur(8px);border-bottom:3px double var(--ink)}
+.hd{display:flex;align-items:center;justify-content:space-between;height:58px}
+.brand{display:flex;align-items:baseline;gap:10px;font-family:var(--serif);font-weight:900;font-size:21px}
+.brand .dot{color:var(--dn);font-size:13px}
+.brand .mk{color:var(--ink2)}
+nav.top{display:flex;gap:20px;font-size:13.5px;color:var(--ink2);font-weight:500}
+nav.top a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:4px}
+/* --- ticker tape --- */
+.tape{position:sticky;top:58px;z-index:49;background:var(--tapebg);color:#EDE7D6;overflow:hidden;border-bottom:1px solid var(--ink);height:34px;display:flex;align-items:center}
+.tape-in{display:inline-block;white-space:nowrap;font-family:var(--mono);font-size:12.5px;animation:tick 55s linear infinite;will-change:transform}
+.tape:hover .tape-in{animation-play-state:paused}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tape .ti{padding:0 14px}
+.tape .tsep{color:var(--rule2);padding:0 2px}
+.tape .up{color:#5BC98A}.tape .dn{color:#F06A70}
+.hero{padding:52px 0 28px;border-bottom:2px solid var(--ink)}
+.hero .kicker{font-family:var(--mono);font-size:12px;letter-spacing:2.5px;color:var(--ink2);text-transform:uppercase;margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(44px,8.5vw,88px);font-weight:900;line-height:1.04;letter-spacing:-1px}
+.hero h1 .r{color:var(--dn)}
+.upd{margin-top:20px;font-family:var(--mono);font-size:12.5px;color:var(--ink2);display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.upd .live{color:var(--up);font-weight:600}
+.pulse{display:inline-block;width:8px;height:8px;background:var(--up);animation:pl 1.8s infinite}
+@keyframes pl{0%,100%{box-shadow:0 0 0 0 rgba(14,110,56,.4)}55%{box-shadow:0 0 0 8px rgba(14,110,56,0)}}
+section.ex{padding:40px 0;border-bottom:1px solid var(--rule)}
+.ex-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;border-bottom:3px double var(--ink);padding-bottom:10px}
+.ex-hd h2{font-family:var(--serif);font-size:clamp(28px,4.5vw,40px);font-weight:900;letter-spacing:-.5px}
+.ex-hd .sub{font-family:var(--mono);font-size:11.5px;color:var(--ink2);letter-spacing:.8px}
+.qrow{display:grid;grid-template-columns:1fr 130px 110px;gap:14px;align-items:baseline;padding:15px 6px;border-bottom:1px solid var(--rule)}
 .qrow:last-child{border-bottom:none}
 .qrow .nm{font-size:17.5px;font-weight:700}
-.qrow .nm .sym{display:block;font-family:var(--mono);font-size:11px;color:var(--dim2);font-weight:400}
-.qrow .pr{font-family:var(--mono);font-size:19px;font-weight:600;text-align:left;white-space:nowrap}
+.qrow .nm .sym{display:block;font-family:var(--mono);font-size:11px;color:var(--ink2);font-weight:400}
+.qrow .pr{font-family:var(--mono);font-size:19px;font-weight:600;text-align:left;white-space:nowrap;font-variant-numeric:tabular-nums}
 .qrow .pc{font-family:var(--mono);font-size:14.5px;font-weight:600;text-align:left}
-.up{color:var(--green)}.dn{color:var(--red)}
-.qrow.idx{background:linear-gradient(270deg,transparent,rgba(224,31,46,.05));border-top:2px solid var(--txt)}
-.qrow.idx .nm{font-size:20px;font-weight:900}
+.pc.up::after{content:" ▲";font-size:10px}
+.pc.dn::after{content:" ▼";font-size:10px}
+.up{color:var(--up)}.dn{color:var(--dn)}
+.qrow.idx{background:var(--paper2);border-top:3px double var(--ink)}
+.qrow.idx .nm{font-family:var(--serif);font-size:20px;font-weight:900}
 .qrow.idx .pr{font-size:24px}
-.rng{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;color:var(--dim2);margin-top:-8px;padding-bottom:6px}
-.rng .track{flex:1;height:2px;background:var(--line2);position:relative}
-.rng .pin{position:absolute;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--txt)}
-footer{padding:44px 0 30px;text-align:center}
-footer .fl{font-family:var(--mono);font-size:11.5px;color:var(--dim2);line-height:2}
-.foot-brand{font-weight:900;font-size:clamp(28px,5vw,44px);color:transparent;-webkit-text-stroke:1px var(--line2);margin-bottom:14px}
-.foot-brand .r{-webkit-text-stroke:1px var(--red)}
-.err-note{font-family:var(--mono);font-size:12px;color:var(--red);padding:20px 0}
+@keyframes fUp{0%{background:rgba(14,110,56,.16)}100%{background:transparent}}
+@keyframes fDn{0%{background:rgba(181,18,27,.14)}100%{background:transparent}}
+.qrow.flash-up{animation:fUp 2.2s ease-out}
+.qrow.flash-dn{animation:fDn 2.2s ease-out}
+.rng{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;color:var(--ink2);margin-top:-8px;padding-bottom:6px}
+.rng .track{flex:1;height:3px;background:var(--rule);position:relative}
+.rng .pin{position:absolute;top:-2.5px;width:8px;height:8px;background:var(--ink)}
+footer{padding:48px 0 30px;text-align:center;border-top:3px double var(--ink);margin-top:10px}
+footer .fl{font-family:var(--mono);font-size:11.5px;color:var(--ink2);line-height:2}
+.foot-brand{font-family:var(--serif);font-weight:900;font-size:clamp(30px,5vw,46px);color:transparent;-webkit-text-stroke:1px var(--rule2);margin-bottom:14px}
+.foot-brand .r{-webkit-text-stroke:1px var(--dn)}
+.err-note{font-family:var(--mono);font-size:12px;color:var(--dn);padding:20px 0}
 .admin{max-width:640px;margin:0 auto;padding:50px 20px}
-.admin h1{font-size:28px;font-weight:900;margin-bottom:24px}
+.admin h1{font-family:var(--serif);font-size:30px;font-weight:900;margin-bottom:24px}
 .afield{margin-bottom:14px}
-.afield label{display:block;font-size:12px;color:var(--dim);margin-bottom:5px;font-family:var(--mono)}
-.afield input,.afield select{width:100%;background:var(--bg2);border:1px solid var(--line2);color:var(--txt);font-size:15px;padding:10px 12px;border-radius:6px;font-family:var(--sans);outline:none}
-.afield input:focus{border-color:var(--red)}
-.abtn{background:var(--red);color:#fff;border:none;font-weight:700;font-size:14.5px;padding:11px 26px;border-radius:6px;cursor:pointer;font-family:var(--sans)}
-.witem{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
-.witem .del{background:none;border:1px solid var(--line2);color:var(--dim);border-radius:5px;padding:4px 11px;cursor:pointer;font-family:var(--mono);font-size:11.5px}
-.msg{font-family:var(--mono);font-size:12.5px;margin-top:12px}.msg.ok{color:var(--green)}.msg.err{color:var(--red)}
+.afield label{display:block;font-size:12px;color:var(--ink2);margin-bottom:5px;font-family:var(--mono)}
+.afield input,.afield select{width:100%;background:#FBF8EF;border:1px solid var(--rule2);color:var(--ink);font-size:15px;padding:10px 12px;border-radius:2px;font-family:var(--sans);outline:none}
+.afield input:focus{border-color:var(--ink)}
+.abtn{background:var(--ink);color:var(--paper);border:none;font-weight:700;font-size:14.5px;padding:11px 26px;border-radius:2px;cursor:pointer;font-family:var(--sans);letter-spacing:.5px}
+.abtn:hover{background:#000}
+.witem{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--rule);font-size:14.5px}
+.witem .del{background:none;border:1px solid var(--rule2);color:var(--ink2);border-radius:2px;padding:4px 11px;cursor:pointer;font-family:var(--mono);font-size:11.5px}
+.msg{font-family:var(--mono);font-size:12.5px;margin-top:12px}.msg.ok{color:var(--up)}.msg.err{color:var(--dn)}
 @media(max-width:640px){
   .qrow{grid-template-columns:1fr 96px 84px;gap:8px}
   .qrow .pr{font-size:16px}.qrow.idx .pr{font-size:19px}
@@ -87,6 +104,7 @@ footer .fl{font-family:var(--mono);font-size:11.5px;color:var(--dim2);line-heigh
     </nav>
   </div>
 </header>
+<div class="tape" dir="ltr"><div class="tape-in" id="tapeIn"></div></div>
 <main id="app" class="wrap"></main>
 <script>
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -109,13 +127,16 @@ function agoTxt(ts) {
 }
 function isIndex(sym) { return sym.indexOf("^") === 0 || sym === "TA35.TA"; }
 let DATA = null;
+let PCT_PREV = {};
 async function load() {
   try { const r = await fetch("/api/quotes"); DATA = await r.json(); } catch (e) { DATA = null; }
 }
 function qrow(q) {
-  if (q.err) return '<div class="qrow"><div class="nm">' + esc(q.name) + '<span class="sym">' + esc(q.sym) + '</span></div><div class="pr err-note" style="padding:0">—</div><div class="pc" style="color:var(--dim2)">אין נתון</div></div>';
+  if (q.err) return '<div class="qrow"><div class="nm">' + esc(q.name) + '<span class="sym">' + esc(q.sym) + '</span></div><div class="pr err-note" style="padding:0">—</div><div class="pc" style="color:var(--ink2)">אין נתון</div></div>';
   const cls = q.pct >= 0 ? "up" : "dn";
-  let h = '<div class="qrow' + (isIndex(q.sym) ? " idx" : "") + '">';
+  let flash = "";
+  if (PCT_PREV[q.sym] != null && PCT_PREV[q.sym] !== q.pct) flash = q.pct > PCT_PREV[q.sym] ? " flash-up" : " flash-dn";
+  let h = '<div class="qrow' + (isIndex(q.sym) ? " idx" : "") + flash + '">';
   h += '<div class="nm">' + esc(q.name) + '<span class="sym">' + esc(q.sym) + '</span></div>';
   h += '<div class="pr">' + fmtPrice(q) + '</div>';
   h += '<div class="pc ' + cls + '">' + fmtPct(q.pct) + '</div>';
@@ -125,8 +146,17 @@ function qrow(q) {
   }
   return h + '</div>';
 }
+function renderTape() {
+  const el = $("#tapeIn");
+  if (!el) return;
+  if (!DATA || !DATA.quotes) { el.innerHTML = '<span class="ti">טוען נתונים…</span>'; return; }
+  const items = DATA.quotes.filter(function (q) { return !q.err; }).map(function (q) {
+    return '<span class="ti"><b>' + esc(q.name) + '</b> ' + fmtPrice(q) + ' <span class="' + (q.pct >= 0 ? "up" : "dn") + '">' + fmtPct(q.pct) + '</span></span>';
+  }).join('<span class="tsep">·</span>');
+  el.innerHTML = items + '<span class="tsep">·</span>' + items + '<span class="tsep">·</span>';
+}
 function viewDash() {
-  let h = '<section class="hero"><h1>הבורסה,<br>עכשיו<span class="r">.</span></h1>';
+  let h = '<section class="hero"><div class="kicker">מהדורת הבורסה · מתעדכן חי</div><h1>הבורסה,<br>עכשיו<span class="r">.</span></h1>';
   if (DATA) {
     h += '<div class="upd"><span class="pulse"></span><span class="live">עודכן ' + agoTxt(DATA.updated) + ' (' + fmtClock(DATA.updated) + ')</span><span>נתונים מושהים בכ-15 דקות · מקור: Yahoo Finance</span></div>';
   } else {
@@ -145,6 +175,8 @@ function viewDash() {
   h += '<footer><div class="foot-brand">הגמל <span class="r">הצייץ</span> · שווקים</div>';
   h += '<div class="fl">נתונים מושהים בכ-15 דקות מהשוק · אינם ייעוץ השקעות<br>מתעדכן אוטומטית כל רבע שעה · מקור הנתונים: Yahoo Finance</div></footer>';
   $("#app").innerHTML = h;
+  renderTape();
+  if (DATA && DATA.quotes) { DATA.quotes.forEach(function (q) { if (!q.err) PCT_PREV[q.sym] = q.pct; }); }
 }
 const APW = function () { return sessionStorage.getItem("gamal_admin") || ""; };
 async function adminApi(body) {
@@ -164,11 +196,11 @@ async function viewAdmin() {
     '<div class="afield"><label>שם תצוגה בעברית</label><input id="w_name"></div>' +
     '<div class="afield"><label>בורסה</label><select id="w_grp"><option value="tlv">תל אביב</option><option value="nyse">ניו יורק</option><option value="nasdaq">נסד״ק</option></select></div>' +
     '<button class="abtn" onclick="wAdd()">הוסף למעקב</button><div class="msg" id="amsg"></div><div style="margin-top:26px" id="wlist"></div>' +
-    '<div style="margin-top:20px"><a href="javascript:void(0)" onclick="sessionStorage.removeItem(\'gamal_admin\');route()" style="color:var(--red);font-family:var(--mono);font-size:12.5px">יציאה</a> · <a href="#/" style="font-family:var(--mono);font-size:12.5px;color:var(--dim)">← ללוח</a></div></div>';
+    '<div style="margin-top:20px"><a href="javascript:void(0)" onclick="sessionStorage.removeItem(\'gamal_admin\');route()" style="color:var(--dn);font-family:var(--mono);font-size:12.5px">יציאה</a> · <a href="#/" style="font-family:var(--mono);font-size:12.5px;color:var(--ink2)">← ללוח</a></div></div>';
   $("#app").innerHTML = h;
   if (d.watchlist) {
     $("#wlist").innerHTML = d.watchlist.map(function (w) {
-      return '<div class="witem"><span>' + esc(w.name) + ' <span class="mono" style="color:var(--dim2);font-size:11.5px">' + esc(w.sym) + ' · ' + esc(w.grp) + '</span></span><button class="del" onclick="wDel(\'' + esc(w.sym) + '\')">הסר</button></div>';
+      return '<div class="witem"><span>' + esc(w.name) + ' <span class="mono" style="color:var(--ink2);font-size:11.5px">' + esc(w.sym) + ' · ' + esc(w.grp) + '</span></span><button class="del" onclick="wDel(\'' + esc(w.sym) + '\')">הסר</button></div>';
     }).join("");
   }
 }
