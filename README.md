@@ -5,4 +5,5 @@
 - אתר חי: https://gamal-markets.gamal-hametzaits.workers.dev
 - נתונים: Yahoo Finance (לא רשמי), מתרענן בשרת כל 15 דקות דרך Cloudflare Cron לתוך KV
 - ניהול רשימת מעקב: `#/admin` - סיסמת הניהול נשמרת כ-secret ב-Cloudflare בלבד (ADMIN_SECRET), לעולם לא בקוד
-- אין בכתובות הללו ייעוץ השקעות
+- רענון ידני (`POST /api/refresh`) מוגן בסיסמת הניהול כדי למנוע בזבוז מכסת ה-Free Tier; הרענון הרגיל מתבצע אוטומטית ב-Cron.
+- אין בנתונים הללו ייעוץ השקעות

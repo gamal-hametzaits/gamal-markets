@@ -66,6 +66,9 @@ export default {
     }
 
     if (url.pathname === "/api/refresh") {
+      if (request.method !== "POST") return json({ error: "method not allowed" }, 405);
+      const b = await request.json().catch(() => null);
+      if (!b || !env.ADMIN_SECRET || b.password !== env.ADMIN_SECRET) return json({ error: "unauthorized" }, 401);
       const n = await refresh(env);
       return json({ ok: true, count: n, updated: Math.floor(Date.now() / 1000) });
     }
