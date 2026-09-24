@@ -46,6 +46,13 @@ nav.top a:hover{color:var(--ink);text-decoration:underline;text-underline-offset
 .upd .live{color:var(--up);font-weight:600}
 .pulse{display:inline-block;width:8px;height:8px;background:var(--up);animation:pl 1.8s infinite}
 @keyframes pl{0%,100%{box-shadow:0 0 0 0 rgba(14,110,56,.4)}55%{box-shadow:0 0 0 8px rgba(14,110,56,0)}}
+.stamp{--sc:var(--up);display:inline-flex;align-items:center;gap:6px;font-family:var(--serif);font-weight:900;font-size:15px;letter-spacing:.5px;color:var(--sc);border:2.5px double var(--sc);padding:1px 10px 2px;transform:rotate(-2.5deg);animation:stampIn .45s cubic-bezier(.2,1.6,.4,1) both}
+.stamp.delayed{--sc:#9A6A00}.stamp.stale,.stamp.failed{--sc:var(--dn)}.stamp.partial{--sc:#9A6A00;border-style:dashed}
+.stamp.failed{background:rgba(181,18,27,.07)}
+.upd.s-delayed .pulse{background:#9A6A00;animation:none}.upd.s-stale .pulse,.upd.s-failed .pulse{background:var(--dn);animation:none}
+.upd.s-delayed .live{color:#9A6A00}.upd.s-stale .live,.upd.s-failed .live{color:var(--dn)}
+@keyframes stampIn{0%{opacity:0;transform:rotate(-12deg) scale(1.8)}100%{opacity:1;transform:rotate(-2.5deg) scale(1)}}
+@media (prefers-reduced-motion:reduce){.stamp,.pulse{animation:none}}
 section.ex{padding:40px 0;border-bottom:1px solid var(--rule)}
 .ex-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;border-bottom:3px double var(--ink);padding-bottom:10px}
 .ex-hd h2{font-family:var(--serif);font-size:clamp(28px,4.5vw,40px);font-weight:900;letter-spacing:-.5px}
@@ -128,8 +135,26 @@ function agoTxt(ts) {
 function isIndex(sym) { return sym.indexOf("^") === 0 || sym === "TA35.TA"; }
 let DATA = null;
 let PCT_PREV = {};
+let LOAD_FAIL = false;
+let LAST_STATE = "";
 async function load() {
-  try { const r = await fetch("/api/quotes"); DATA = await r.json(); } catch (e) { DATA = null; }
+  try {
+    const r = await fetch("/api/quotes", { cache: "no-store" });
+    if (!r.ok) throw new Error("http " + r.status);
+    const d = await r.json();
+    if (!d || !Array.isArray(d.quotes) || !d.quotes.length || typeof d.updated !== "number") throw new Error("payload");
+    DATA = d; LOAD_FAIL = false;
+  } catch (e) { LOAD_FAIL = true; }
+}
+// Cron refreshes every 15 minutes: fresh up to 20, delayed up to 45, stale beyond.
+function freshness() {
+  if (LOAD_FAIL) return { k: "failed", t: "תקלת עדכון", d: DATA ? "מוצגים הנתונים האחרונים שנשמרו" : "לא התקבלו נתונים" };
+  const age = (Date.now() / 1000 - DATA.updated) / 60;
+  const bad = DATA.quotes.filter(function (q) { return q.err; }).length;
+  if (age > 45) return { k: "stale", t: "נתונים ישנים", d: "העדכון האחרון לפני יותר מ-45 דקות" };
+  if (bad) return { k: "partial", t: "עדכון חלקי", d: bad + " מתוך " + DATA.quotes.length + " ללא נתון" };
+  if (age > 20) return { k: "delayed", t: "מתעכב", d: "הרענון הבא מאחר" };
+  return { k: "fresh", t: "טרי", d: "" };
 }
 function qrow(q) {
   if (q.err) return '<div class="qrow"><div class="nm">' + esc(q.name) + '<span class="sym">' + esc(q.sym) + '</span></div><div class="pr err-note" style="padding:0">—</div><div class="pc" style="color:var(--ink2)">אין נתון</div></div>';
@@ -158,7 +183,12 @@ function renderTape() {
 function viewDash() {
   let h = '<section class="hero"><div class="kicker">מהדורת הבורסה · מתעדכן חי</div><h1>הבורסה,<br>עכשיו<span class="r">.</span></h1>';
   if (DATA) {
-    h += '<div class="upd"><span class="pulse"></span><span class="live">עודכן ' + agoTxt(DATA.updated) + ' (' + fmtClock(DATA.updated) + ')</span><span>נתונים מושהים בכ-15 דקות · מקור: Yahoo Finance</span></div>';
+    const f = freshness();
+    const st = f.k === LAST_STATE ? ' style="animation:none"' : "";
+    LAST_STATE = f.k;
+    h += '<div class="upd s-' + f.k + '" role="status"><span class="stamp ' + f.k + '"' + st + '>' + f.t + '</span><span class="pulse"></span><span class="live">עודכן ' + agoTxt(DATA.updated) + ' (' + fmtClock(DATA.updated) + ')</span>' + (f.d ? '<span>' + esc(f.d) + '</span>' : "") + '<span>נתונים מושהים בכ-15 דקות · מקור: Yahoo Finance</span></div>';
+  } else if (LOAD_FAIL) {
+    h += '<div class="upd s-failed" role="status"><span class="stamp failed">תקלת עדכון</span><span>לא התקבלו נתונים · ננסה שוב בעוד דקה</span></div>';
   } else {
     h += '<div class="upd">טוען נתונים…</div>';
   }
